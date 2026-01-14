@@ -8,6 +8,8 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 
+void func_80A0E564_jp(Actor *this, Game_Play *game_play);
+
 #if 0
 ActorProfile Shop_Profile = {
     /* */ ACTOR_SHOP,
@@ -52,7 +54,12 @@ ActorProfile Shop_Profile = {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E564_jp.s")
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_init.s")
+void aSHOP_actor_init(Actor *thisx, Game_Play *game_play) {
+    mFI_SetFG_common(0xF0E3, thisx->home.pos, 0);
+    func_80A0E564_jp(thisx, game_play);
+
+    thisx->update = func_80A0E564_jp;
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E654_jp.s")
 
