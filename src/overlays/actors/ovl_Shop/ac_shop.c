@@ -3,12 +3,13 @@
 #include "m_object.h"
 #include "overlays/gamestates/ovl_play/m_play.h"
 
+#define THIS ((Shop*)thisx)
+
 void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
-
-void func_80A0E564_jp(Actor *this, Game_Play *game_play);
+void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 
 #if 0
 ActorProfile Shop_Profile = {
@@ -52,13 +53,17 @@ ActorProfile Shop_Profile = {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E4A8_jp.s")
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E564_jp.s")
+#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_move.s")
 
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_init.s")
 void aSHOP_actor_init(Actor *thisx, Game_Play *game_play) {
-    mFI_SetFG_common(0xF0E3, thisx->home.pos, 0);
-    func_80A0E564_jp(thisx, game_play);
+    Shop* this = THIS;
+    StructureActor* shop = &this->structureActor;
 
-    thisx->update = func_80A0E564_jp;
+    mFI_SetFG_common(0xF0E3, shop->actor.home.pos, 0);
+    aSHOP_actor_move(&shop->actor, game_play);
+
+    shop->actor.update = aSHOP_actor_move;
 }
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E654_jp.s")
