@@ -46,7 +46,7 @@ void mEv_ClearEventInfo(void);
 // void func_8007D58C_jp();
 // void func_8007D59C_jp();
 s32 mEv_CheckRealArbeit(void);
-// void func_8007D650_jp();
+s32 func_8007D650_jp(void);
 s32 mEv_CheckFirstJob(void);
 // void func_8007D734_jp();
 // void func_8007D784_jp();

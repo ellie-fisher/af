@@ -65,7 +65,7 @@ void mSP_ExchangeLineUp_InGame(struct Game* game);
 lbRTC_hour_t mSP_GetShopCloseTime_Bgm(void);
 // void func_800C23EC_jp();
 // void func_800C2480_jp();
-// void func_800C2578_jp();
+s32 func_800C2578_jp(void);
 // void func_800C2718_jp();
 // void func_800C284C_jp();
 void mSP_RandomUmbSelect(u16*, s32);
