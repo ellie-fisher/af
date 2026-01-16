@@ -71,9 +71,9 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     s32 var_v2;
     s32 var_v3;
     s32 var_v4;
+
     Shop* this = THIS;
     StructureActor* shop = &this->structureActor;
-
     player = get_player_actor_withoutCheck(game_play);
     var_v2 = common_data.time.season == 3;
     var_v3 = 1;
@@ -108,7 +108,25 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     shop->unk_1E8 = 1;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_dt.s")
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_dt.s")
+void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
+    Shop* this = THIS;
+
+    common_data.clip.structureClip->removeInstanceProc(common_data.clip.structureClip->objectSegmentTable,
+                                                       ARRAY_COUNT(common_data.clip.structureClip->objectSegmentTable),
+                                                       STRUCTURE_TYPE_SHOP, thisx);
+    common_data.clip.structureClip->removeInstanceProc(common_data.clip.structureClip->paletteSegmentTable,
+                                                       ARRAY_COUNT(common_data.clip.structureClip->paletteSegmentTable),
+                                                       STRUCTURE_PALETTE_SHOP, thisx);
+    common_data.clip.structureClip->removeInstanceProc(common_data.clip.structureClip->shadowSegmentTable,
+                                                       ARRAY_COUNT(common_data.clip.structureClip->shadowSegmentTable),
+                                                       STRUCTURE_TYPE_SHOP, thisx);
+
+    cKF_SkeletonInfo_R_dt(&this->structureActor.skeletonInfo);
+
+    thisx->world.pos.x -= -20.0f;
+    thisx->world.pos.z -= 20.0f;
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DD54_jp.s")
 
@@ -122,10 +140,8 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
 
 //#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E1F0_jp.s")
 void func_80A0E1F0_jp(Actor* thisx) {
-    s32 timeSec;
+    s32 timeSec = common_data.time.nowSec;
     Shop* this = THIS;
-
-    timeSec = common_data.time.nowSec;
 
     if (func_8007D650_jp() == 1) {
         this->structureActor.unk_2B8 = 0;
