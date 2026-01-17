@@ -49,6 +49,9 @@ ActorProfile Shop_Profile = {
 };
 
 static BaseSkeletonR* D_80A0E9E0_jp[2] = { (BaseSkeletonR*)0x0605A3AC, (BaseSkeletonR*)0x0605C3EC };
+static mCoBG_unkStruct2* D_80A0EA6C_jp[];
+static f32 D_FLT_80A0EA74_jp[4] = { -80.0f, -40.0f, 0.0f, 40.0f };
+static f32 D_80A0EA84_jp[4] = { 80.0f, 40.0f, 0.0f, -40.0f };
 static BaseAnimationR* D_80A0EA94_jp[2] = { (BaseAnimationR*)0x0605A410, (BaseAnimationR*)0x0605C450 };
 static f32 D_FLT_80A0EA9C_jp[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
 static f32 D_FLT_80A0EAAC_jp[4] = { 1.0f, 16.0f, 16.0f, 1.0f };
@@ -57,6 +60,9 @@ static ShopActionFunc D_80A0EACC_jp[];
 #endif
 
 extern BaseSkeletonR* D_80A0E9E0_jp[];
+extern mCoBG_unkStruct2* D_80A0EA6C_jp[];
+extern f32 D_FLT_80A0EA74_jp[4];
+extern f32 D_80A0EA84_jp[4];
 extern BaseAnimationR* D_80A0EA94_jp[];
 extern f32 D_FLT_80A0EA9C_jp[];
 extern f32 D_FLT_80A0EAAC_jp[];
@@ -128,7 +134,71 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
     thisx->world.pos.z -= 20.0f;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DD54_jp.s")
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DD54_jp.s")
+void func_80A0DD54_jp(Actor* thisx, s32 arg0) {
+    s32 pad;
+    s32 i;
+    mCoBG_unkStruct2* offsetTable;
+    xyz_t pos;
+    s32 var_v0;
+    f32* ptr;
+    s32 var_v1;
+
+    offsetTable = D_80A0EA6C_jp[arg0];
+    ptr = D_80A0EA84_jp; var_v0 = 0; do {
+        i = 0;
+        pos.z = *ptr + thisx->home.pos.z;
+        var_v1 = var_v0;
+
+        for (i; i < 4; i++) {
+            if (var_v1 != 0 && var_v1 != 3 && var_v1 != 12 && var_v1 != 15) {
+                pos.x = thisx->home.pos.x + D_FLT_80A0EA74_jp[i];
+                mCoBG_SetPluss5PointOffset_file(pos, *offsetTable, "../ac_shop_move.c_inc", 162);
+            }
+
+            var_v1++;
+            offsetTable++;
+        }
+
+        var_v0 += 4;
+    } while (++ptr != (f32*)D_80A0EA94_jp);
+}
+
+// void func_80A0DD54_jp(void *arg0, s32 arg1) {
+//     f32 sp68;
+//     f32 sp60;
+//     s32 sp5C;
+//     f32 *sp58;
+//     ? *var_s2;
+//     f32 *temp_t0;
+//     s32 var_s0;
+//     s32 var_s1;
+
+//     var_s2 = D_80A0EA6C_jp[arg1];
+//     sp58 = D_80A0EA84_jp;
+//     sp5C = 0;
+//     do {
+//         var_s1 = 0;
+//         var_s0 = sp5C;
+//         sp68 = *sp58 + arg0->unk14;
+// loop_2:
+//         if ((var_s0 != 0) && (var_s0 != 3) && (var_s0 != 0xC) && (var_s0 != 0xF)) {
+//             sp60 = D_FLT_80A0EA74_jp[var_s1] + arg0->unkC;
+//             mCoBG_SetPluss5PointOffset_file(/* xyz_t+0x0 */ subroutine_arg0, /* xyz_t+0x4 */ sp60.unk4, /* xyz_t+0x8
+//             */ sp60.unk8, /* mCoBG_unkStruct2+0x0 */ subroutine_arg3, /* mCoBG_unkStruct2+0x4 */ var_s2->unk4,
+//             "../ac_shop_move.c_inc", 0xA2, /* extra? */ var_s2->unk5, /* extra? */ var_s2->unk6);
+//         }
+//         var_s1 += 1;
+//         var_s0 += 1;
+//         var_s2 += 7;
+//         if (var_s1 != 4) {
+//             goto loop_2;
+//         }
+//         temp_t0 = &sp58[1];
+//         sp58 = temp_t0;
+//         sp5C += 4;
+//     } while (temp_t0 != &D_80A0EA94_jp);
+// }
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DED4_jp.s")
 
@@ -138,7 +208,7 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E0DC_jp.s")
 
-//#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E1F0_jp.s")
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E1F0_jp.s")
 void func_80A0E1F0_jp(Actor* thisx) {
     s32 timeSec = common_data.time.nowSec;
     Shop* this = THIS;
