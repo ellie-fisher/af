@@ -16,6 +16,7 @@
 #include "overlays/actors/player_actor/m_player.h"
 #include "m_player_lib.h"
 #include "m_common_data.h"
+#include "m_rcp.h"
 
 #define THIS ((Shop*)thisx)
 
@@ -24,6 +25,11 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
+
+s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
+                     u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
+s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
+                     u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
 
 void func_80A0E2B4_jp(Shop* this, Game_Play* game_play);
 void func_80A0E334_jp(Shop* this, Game_Play* game_play);
@@ -54,6 +60,8 @@ static mCoBG_unkStruct2* D_80A0EA6C_jp[];
 static f32 D_FLT_80A0EA74_jp[4] = { -80.0f, -40.0f, 0.0f, 40.0f };
 static f32 D_80A0EA84_jp[4] = { 80.0f, 40.0f, 0.0f, -40.0f };
 static BaseAnimationR* D_80A0EA94_jp[2] = { (BaseAnimationR*)0x0605A410, (BaseAnimationR*)0x0605C450 };
+static u8 D_80A0E9C4_jp[8] = { 1, 0, 1, 0, 1, 0, 0, 1 };
+static ShadowData D_80A0E9CC_jp = { 8, D_80A0E9C4_jp, 60.0f, (Vtx *)0x06006578, (Gfx *)0x060065F8 };
 static f32 D_FLT_80A0EA9C_jp[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
 static f32 D_FLT_80A0EAAC_jp[4] = { 1.0f, 16.0f, 16.0f, 1.0f };
 static f32 D_FLT_80A0EABC_jp[4] = { 1.0f, 16.0f, 1.0f, 16.0f };
@@ -64,6 +72,8 @@ extern BaseSkeletonR* D_80A0E9E0_jp[];
 extern mCoBG_unkStruct2* D_80A0EA6C_jp[];
 extern f32 D_FLT_80A0EA74_jp[4];
 extern f32 D_80A0EA84_jp[4];
+extern u8 D_80A0E9C4_jp[];
+extern ShadowData D_80A0E9CC_jp;
 extern BaseAnimationR* D_80A0EA94_jp[];
 extern f32 D_FLT_80A0EA9C_jp[];
 extern f32 D_FLT_80A0EAAC_jp[];
@@ -242,4 +252,32 @@ void aSHOP_actor_init(Actor* thisx, Game_Play* game_play) {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E6E8_jp.s")
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_draw.s")
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_draw.s")
+void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play) {
+    GraphicsContext* gfxCtx = game_play->state.gfxCtx;
+    Shop* this = THIS;
+    SkeletonInfoR* skeletonInfo = &this->structureActor.skeletonInfo;
+    Mtx* mtx;
+    s32 object;
+    u16* palette;
+    u8 numberOfDisplayLists = skeletonInfo->skeleton->unk01;
+
+    mtx = GRAPH_ALLOC_NO_ALIGN(gfxCtx, sizeof(Mtx) * numberOfDisplayLists);
+
+    if (mtx != NULL) {
+        object = common_data.clip.structureClip->getObjectSegment(STRUCTURE_TYPE_SHOP);
+        palette = common_data.clip.structureClip->getPalSegment(STRUCTURE_PALETTE_SHOP);
+
+        _texture_z_light_fog_prim_npc(gfxCtx);
+
+        OPEN_POLY_OPA_DISP(gfxCtx);
+        gSPSegment(__polyOpa++, G_MWO_SEGMENT_8, palette);
+        SegmentBaseAddress[6] = (uintptr_t)OS_PHYSICAL_TO_K0(object);
+        gSPSegment(__polyOpa++, G_MWO_SEGMENT_6, object);
+        CLOSE_POLY_OPA_DISP(gfxCtx);
+
+        cKF_Si3_draw_R_SV(game_play, skeletonInfo, mtx, func_80A0E654_jp, func_80A0E6E8_jp, this);
+
+        common_data.clip.unk_074->unk_04(game_play, &D_80A0E9CC_jp, STRUCTURE_TYPE_SHOP);
+    }
+}
