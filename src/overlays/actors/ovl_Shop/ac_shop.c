@@ -136,32 +136,25 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
 
 // #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DD54_jp.s")
 void func_80A0DD54_jp(Actor* thisx, s32 arg0) {
-    s32 pad;
     s32 i;
+    s32 j;
     mCoBG_unkStruct2* offsetTable;
     xyz_t pos;
-    s32 var_v0;
-    f32* ptr;
-    s32 var_v1;
 
     offsetTable = D_80A0EA6C_jp[arg0];
-    ptr = D_80A0EA84_jp; var_v0 = 0; do {
-        i = 0;
-        pos.z = *ptr + thisx->home.pos.z;
-        var_v1 = var_v0;
 
-        for (i; i < 4; i++) {
-            if (var_v1 != 0 && var_v1 != 3 && var_v1 != 12 && var_v1 != 15) {
+    for (j = 0; j < 4; j++) {
+        pos.z = D_80A0EA84_jp[j] + thisx->home.pos.z;
+
+        for (i = 0; i < 4; i++) {
+            if (j * 4 + i != 0 && j * 4 + i != 3 && j * 4 + i != 12 && j * 4 + i != 15) {
                 pos.x = thisx->home.pos.x + D_FLT_80A0EA74_jp[i];
                 mCoBG_SetPluss5PointOffset_file(pos, *offsetTable, "../ac_shop_move.c_inc", 162);
             }
 
-            var_v1++;
             offsetTable++;
         }
-
-        var_v0 += 4;
-    } while (++ptr != (f32*)D_80A0EA94_jp);
+    }
 }
 
 // void func_80A0DD54_jp(void *arg0, s32 arg1) {
