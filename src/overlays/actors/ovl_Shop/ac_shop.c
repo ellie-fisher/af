@@ -29,7 +29,7 @@ void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
                             u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
 s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                     u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
+                     u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
 
 void func_80A0E2B4_jp(Shop* this, Game_Play* game_play);
 void func_80A0E334_jp(Shop* this, Game_Play* game_play);
@@ -79,6 +79,7 @@ extern f32 D_FLT_80A0EA9C_jp[];
 extern f32 D_FLT_80A0EAAC_jp[];
 extern f32 D_FLT_80A0EABC_jp[];
 extern ShopActionFunc D_80A0EACC_jp[];
+extern s32 D_80A0EADC_jp[];
 
 void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     s32 var_v0;
@@ -265,7 +266,46 @@ s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo UN
     return 1;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E6E8_jp.s")
+s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s32 jointIndex, Gfx** dlist UNUSED,
+                     u8* displayBufferFlag UNUSED, void* thisx, s_xyz* rotation UNUSED, xyz_t* translation UNUSED) {
+    GraphicsContext* gfxCtx;
+    Shop* this = THIS;
+    s32 object;
+    u16* palette;
+    s32 isWinter;
+    Mtx* mtx;
+
+    gfxCtx = game_play->state.gfxCtx;
+
+    if (jointIndex == 6) {
+        mtx = _Matrix_to_Mtx_new(gfxCtx);
+
+        if (mtx != NULL) {
+            object = common_data.clip.structureClip->getObjectSegment(STRUCTURE_TYPE_SHOP);
+            palette = common_data.clip.structureClip->getPalSegment(STRUCTURE_PALETTE_SHOP);
+            isWinter = common_data.time.season == WINTER;
+
+            _texture_z_light_fog_prim_shadow(gfxCtx);
+
+            OPEN_SHADOW_DISP(gfxCtx);
+            gSPSegment(__shadow_gfx++, G_MWO_SEGMENT_8, palette);
+            gSPSegment(__shadow_gfx++, G_MWO_SEGMENT_6, object);
+            gDPPipeSync(__shadow_gfx++);
+
+            if (this->structureActor.unk_2B8 != 0) {
+                gDPSetPrimColor(__shadow_gfx++, 0, 0x78, 0xFF, 0xFF, 0x96, 0x00);
+            } else {
+                gDPSetPrimColor(__shadow_gfx++, 0, 0, 0x00, 0x00, 0x00, 0x00);
+            }
+
+            gSPMatrix(__shadow_gfx++, mtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(__shadow_gfx++, D_80A0EADC_jp[isWinter]);
+            CLOSE_SHADOW_DISP(gfxCtx);
+        }
+    }
+
+    return 1;
+}
 
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play) {
     GraphicsContext* gfxCtx = game_play->state.gfxCtx;
