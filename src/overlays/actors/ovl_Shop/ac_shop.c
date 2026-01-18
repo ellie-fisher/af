@@ -27,7 +27,7 @@ void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 
 s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                     u8* displayBufferFlag, void* /*thisx*/, s_xyz* rotation, xyz_t* translation);
+                     u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
 s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
                      u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
 
@@ -80,7 +80,6 @@ extern f32 D_FLT_80A0EAAC_jp[];
 extern f32 D_FLT_80A0EABC_jp[];
 extern ShopActionFunc D_80A0EACC_jp[];
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_ct.s")
 void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     s32 var_v0;
     s32 var_v1;
@@ -125,7 +124,6 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     shop->unk_1E8 = 1;
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_dt.s")
 void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
     Shop* this = THIS;
 
@@ -145,7 +143,6 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
     thisx->world.pos.z -= 20.0f;
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_set_bgOffset.s")
 void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex) {
     s32 i;
     s32 j;
@@ -176,7 +173,6 @@ void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex) {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E0DC_jp.s")
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E1F0_jp.s")
 void func_80A0E1F0_jp(Actor* thisx) {
     s32 timeSec = common_data.time.nowSec;
     Shop* this = THIS;
@@ -209,7 +205,6 @@ void func_80A0E1F0_jp(Actor* thisx) {
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E474_jp.s")
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_setupAction.s")
 void aSHOP_setupAction(Shop* this, s32 processIndex) {
     f32 speed = D_FLT_80A0EA9C_jp[processIndex];
     s32 isWinter = common_data.time.season == WINTER;
@@ -222,7 +217,6 @@ void aSHOP_setupAction(Shop* this, s32 processIndex) {
     this->structureActor.unk_2B4 = processIndex;
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_move.s")
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play) {
     Shop* this = THIS;
     StructureActor* shop = &this->structureActor;
@@ -237,7 +231,6 @@ void aSHOP_actor_move(Actor* thisx, Game_Play* game_play) {
     func_80A0E1F0_jp(thisx);
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_init.s")
 void aSHOP_actor_init(Actor* thisx, Game_Play* game_play) {
     Shop* this = THIS;
     StructureActor* shop = &this->structureActor;
@@ -248,7 +241,6 @@ void aSHOP_actor_init(Actor* thisx, Game_Play* game_play) {
     shop->actor.update = aSHOP_actor_move;
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E654_jp.s")
 s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s32 jointIndex, Gfx** dlist,
                      u8* displayBufferFlag UNUSED, void* thisx, s_xyz* rotation UNUSED, xyz_t* translation UNUSED) {
     Shop* this = THIS;
@@ -274,7 +266,6 @@ s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E6E8_jp.s")
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_actor_draw.s")
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play) {
     GraphicsContext* gfxCtx = game_play->state.gfxCtx;
     Shop* this = THIS;
