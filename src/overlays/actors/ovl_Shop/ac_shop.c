@@ -27,7 +27,7 @@ void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 
 s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                     u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
+                     u8* displayBufferFlag, void* /*thisx*/, s_xyz* rotation, xyz_t* translation);
 s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
                      u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
 
@@ -248,7 +248,29 @@ void aSHOP_actor_init(Actor* thisx, Game_Play* game_play) {
     shop->actor.update = aSHOP_actor_move;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E654_jp.s")
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E654_jp.s")
+s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s32 jointIndex, Gfx** dlist,
+                     u8* displayBufferFlag UNUSED, void* thisx, s_xyz* rotation UNUSED, xyz_t* translation UNUSED) {
+    Shop* this = THIS;
+    GraphicsContext* gfxCtx = game_play->state.gfxCtx;
+
+    if (jointIndex == 5) {
+        OPEN_POLY_OPA_DISP(gfxCtx);
+        gDPPipeSync(__polyOpa++);
+
+        if (this->structureActor.unk_2B8 != 0) {
+            gDPSetEnvColor(__polyOpa++, 0xFF, 0xFF, 0x96, 0x78);
+        } else {
+            gDPSetEnvColor(__polyOpa++, 0x00, 0x00, 0x00, 0x00);
+        }
+
+        CLOSE_POLY_OPA_DISP(gfxCtx);
+    } else if (jointIndex == 6) {
+        *dlist = NULL;
+    }
+
+    return 1;
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E6E8_jp.s")
 
