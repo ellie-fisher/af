@@ -15,6 +15,7 @@
 #include "6E3240.h"
 #include "overlays/actors/player_actor/m_player.h"
 #include "m_player_lib.h"
+#include "m_common_data.h"
 
 #define THIS ((Shop*)thisx)
 
@@ -74,20 +75,20 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     s32 var_v0;
     s32 var_v1;
     Player* player;
-    s32 var_v2;
+    s32 isWinter;
     s32 var_v3;
     s32 var_v4;
 
     Shop* this = THIS;
     StructureActor* shop = &this->structureActor;
     player = get_player_actor_withoutCheck(game_play);
-    var_v2 = common_data.time.season == 3;
+    isWinter = common_data.time.season == WINTER;
     var_v3 = 1;
 
     SegmentBaseAddress[6] =
         (uintptr_t)OS_PHYSICAL_TO_K0(common_data.clip.structureClip->getObjectSegment(STRUCTURE_TYPE_SHOP));
 
-    cKF_SkeletonInfo_R_ct(&shop->skeletonInfo, D_80A0E9E0_jp[var_v2], NULL, shop->jointTable, shop->morphTable);
+    cKF_SkeletonInfo_R_ct(&shop->skeletonInfo, D_80A0E9E0_jp[isWinter], NULL, shop->jointTable, shop->morphTable);
     aSHOP_set_bgOffset(this, 1);
 
     thisx->world.pos.x += -20.0f;
@@ -200,12 +201,12 @@ void func_80A0E1F0_jp(Actor* thisx) {
 
 // #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_setupAction.s")
 void aSHOP_setupAction(Shop* this, s32 processIndex) {
-    f32 var_v0 = D_FLT_80A0EA9C_jp[processIndex];
-    s32 var_v1 = common_data.time.season == 3;
+    f32 speed = D_FLT_80A0EA9C_jp[processIndex];
+    s32 isWinter = common_data.time.season == WINTER;
 
     cKF_SkeletonInfo_R_init(&this->structureActor.skeletonInfo, this->structureActor.skeletonInfo.skeleton,
-                            D_80A0EA94_jp[var_v1], 1.0f, D_FLT_80A0EABC_jp[processIndex],
-                            D_FLT_80A0EAAC_jp[processIndex], var_v0, 0.0f, ANIMATION_STOP, NULL);
+                            D_80A0EA94_jp[isWinter], 1.0f, D_FLT_80A0EABC_jp[processIndex],
+                            D_FLT_80A0EAAC_jp[processIndex], speed, 0.0f, ANIMATION_STOP, NULL);
 
     this->structureActor.process = D_80A0EACC_jp[processIndex];
     this->structureActor.unk_2B4 = processIndex;
