@@ -14014,7 +14014,7 @@ RO_FLT_80A0DA6C_jp = 0x80A0DA6C; // type:f32
 
 aSHOP_actor_ct = 0x80A0DB10; // type:func
 aSHOP_actor_dt = 0x80A0DC94; // type:func
-func_80A0DD54_jp = 0x80A0DD54; // type:func
+aSHOP_set_bgOffset = 0x80A0DD54; // type:func
 func_80A0DED4_jp = 0x80A0DED4; // type:func
 func_80A0DFD0_jp = 0x80A0DFD0; // type:func
 func_80A0E02C_jp = 0x80A0E02C; // type:func

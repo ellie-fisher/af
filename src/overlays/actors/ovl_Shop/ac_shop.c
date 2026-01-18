@@ -29,7 +29,7 @@ void func_80A0E334_jp(Shop* this, Game_Play* game_play);
 void func_80A0E440_jp(Shop* this, Game_Play* game_play);
 void func_80A0E474_jp(Shop* this, Game_Play* game_play);
 
-void func_80A0DD54_jp(Actor* thisx, s32 arg0);
+void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex);
 void func_80A0E1F0_jp(Actor* thisx);
 void aSHOP_setupAction(Shop* this, s32 processIndex);
 
@@ -88,7 +88,7 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
         (uintptr_t)OS_PHYSICAL_TO_K0(common_data.clip.structureClip->getObjectSegment(STRUCTURE_TYPE_SHOP));
 
     cKF_SkeletonInfo_R_ct(&shop->skeletonInfo, D_80A0E9E0_jp[var_v2], NULL, shop->jointTable, shop->morphTable);
-    func_80A0DD54_jp(thisx, 1);
+    aSHOP_set_bgOffset(this, 1);
 
     thisx->world.pos.x += -20.0f;
     thisx->uncullZoneScale = 550.0f;
@@ -134,21 +134,21 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play UNUSED) {
     thisx->world.pos.z -= 20.0f;
 }
 
-// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DD54_jp.s")
-void func_80A0DD54_jp(Actor* thisx, s32 arg0) {
+// #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/aSHOP_set_bgOffset.s")
+void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex) {
     s32 i;
     s32 j;
     mCoBG_unkStruct2* offsetTable;
     xyz_t pos;
 
-    offsetTable = D_80A0EA6C_jp[arg0];
+    offsetTable = D_80A0EA6C_jp[heightTableIndex];
 
     for (j = 0; j < 4; j++) {
-        pos.z = D_80A0EA84_jp[j] + thisx->home.pos.z;
+        pos.z = D_80A0EA84_jp[j] + this->structureActor.actor.home.pos.z;
 
         for (i = 0; i < 4; i++) {
             if (j * 4 + i != 0 && j * 4 + i != 3 && j * 4 + i != 12 && j * 4 + i != 15) {
-                pos.x = thisx->home.pos.x + D_FLT_80A0EA74_jp[i];
+                pos.x = this->structureActor.actor.home.pos.x + D_FLT_80A0EA74_jp[i];
                 mCoBG_SetPluss5PointOffset_file(pos, *offsetTable, "../ac_shop_move.c_inc", 162);
             }
 
