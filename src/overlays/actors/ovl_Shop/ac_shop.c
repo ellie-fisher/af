@@ -26,8 +26,8 @@ void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 
-s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                     u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
+s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
+                            u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
 s32 func_80A0E6E8_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
                      u8* displayBufferFlag, void*, s_xyz* rotation, xyz_t* translation);
 
@@ -241,8 +241,9 @@ void aSHOP_actor_init(Actor* thisx, Game_Play* game_play) {
     shop->actor.update = aSHOP_actor_move;
 }
 
-s32 func_80A0E654_jp(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s32 jointIndex, Gfx** dlist,
-                     u8* displayBufferFlag UNUSED, void* thisx, s_xyz* rotation UNUSED, xyz_t* translation UNUSED) {
+s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo UNUSED, s32 jointIndex, Gfx** dlist,
+                            u8* displayBufferFlag UNUSED, void* thisx, s_xyz* rotation UNUSED,
+                            xyz_t* translation UNUSED) {
     Shop* this = THIS;
     GraphicsContext* gfxCtx = game_play->state.gfxCtx;
 
@@ -289,7 +290,7 @@ void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play) {
         gSPSegment(__polyOpa++, G_MWO_SEGMENT_6, object);
         CLOSE_POLY_OPA_DISP(gfxCtx);
 
-        cKF_Si3_draw_R_SV(game_play, skeletonInfo, mtx, func_80A0E654_jp, func_80A0E6E8_jp, this);
+        cKF_Si3_draw_R_SV(game_play, skeletonInfo, mtx, aSHOP_actor_draw_before, func_80A0E6E8_jp, this);
 
         common_data.clip.unk_074->unk_04(game_play, &D_80A0E9CC_jp, STRUCTURE_TYPE_SHOP);
     }
