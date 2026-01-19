@@ -30,7 +30,7 @@ void func_80A0DED4_jp(Shop* this, Game_Play* game_play);
 
 s32 func_80A0DFD0_jp(Game_Play* game_play);
 s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play);
-void func_80A0E0DC_jp(Shop* this);
+void func_80A0E0DC_jp(Actor* thisx);
 
 void func_80A0E1F0_jp(Actor* thisx);
 
@@ -233,7 +233,7 @@ s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play) {
     return var_v0;
 }
 
-void func_80A0E0DC_jp(Shop* this UNUSED) {
+void func_80A0E0DC_jp(Actor* thisx UNUSED) {
     s32 timeSec;
     Color_RGBA8 color;
     s32 msgNum;
@@ -293,7 +293,15 @@ void func_80A0E1F0_jp(Actor* thisx) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E2B4_jp.s")
+void func_80A0E2B4_jp(Shop* this, Game_Play* game_play) {
+    if (mDemo_Check(7, &this->structureActor.actor) != 1) {
+        if (func_800C2578_jp() == 2) {
+            aSHOP_setupAction(this, 3);
+        } else if (func_80A0E02C_jp(this, game_play) != 0) {
+            mDemo_Request(7, &this->structureActor.actor, func_80A0E0DC_jp);
+        }
+    }
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E334_jp.s")
 
