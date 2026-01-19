@@ -12,10 +12,12 @@
 #include "m_event.h"
 #include "code_variables.h"
 #include "overlays/gamestates/ovl_play/m_play.h"
-#include "6E3240.h"
 #include "overlays/actors/player_actor/m_player.h"
+#include "6E3240.h"
 #include "m_player_lib.h"
 #include "m_common_data.h"
+#include "m_bgm.h"
+#include "m_collision_bg.h"
 #include "m_rcp.h"
 
 #define THIS ((Shop*)thisx)
@@ -25,6 +27,8 @@ void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
+
+void func_80A0DED4_jp(Shop* this, Game_Play* game_play);
 
 s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
                             u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
@@ -65,7 +69,7 @@ static ShadowData D_80A0E9CC_jp = { 8, D_80A0E9C4_jp, 60.0f, (Vtx *)0x06006578, 
 static f32 D_FLT_80A0EA9C_jp[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
 static f32 D_FLT_80A0EAAC_jp[4] = { 1.0f, 16.0f, 16.0f, 1.0f };
 static f32 D_FLT_80A0EABC_jp[4] = { 1.0f, 16.0f, 1.0f, 16.0f };
-static ShopActionFunc D_80A0EACC_jp[];
+static ShopActionFunc D_80A0EACC_jp[4] = { func_80A0E2B4_jp, func_80A0E334_jp, func_80A0E440_jp, func_80A0E474_jp };
 #endif
 
 extern BaseSkeletonR* D_80A0E9E0_jp[];
@@ -166,7 +170,29 @@ void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DED4_jp.s")
+void func_80A0DED4_jp(Shop* this, Game_Play* game_play) {
+    CommonData* data = &common_data;
+    xyz_t pos;
+
+    if (game_play->unk_1EE3 == 0) {
+        data->structureExitDoorData.nextSceneId = data->save.sceneNo;
+        data->structureExitDoorData.exitOrientation = 7;
+        data->structureExitDoorData.exitType = 0;
+        data->structureExitDoorData.params = 3;
+
+        pos.x = this->structureActor.actor.world.pos.x - 68.29f;
+        pos.z = this->structureActor.actor.world.pos.z + 68.29f;
+        pos.y = mCoBG_GetBgY_OnlyCenter_FromWpos2(pos, 0.0f);
+
+        data->structureExitDoorData.exitPos.x = (s16)pos.x;
+        data->structureExitDoorData.exitPos.y = (s16)pos.y;
+        data->structureExitDoorData.exitPos.z = (s16)pos.z;
+        data->structureExitDoorData.fgName = 0x5804;
+        data->structureExitDoorData.wipeType = 1;
+
+        mBGMPsComp_make_ps_wipe(0x28A);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DFD0_jp.s")
 
