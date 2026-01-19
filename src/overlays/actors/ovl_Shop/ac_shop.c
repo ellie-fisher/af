@@ -30,6 +30,7 @@ void func_80A0DED4_jp(Shop* this, Game_Play* game_play);
 
 s32 func_80A0DFD0_jp(Game_Play* game_play);
 s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play);
+void func_80A0E0DC_jp(Shop* this);
 
 void func_80A0E1F0_jp(Actor* thisx);
 
@@ -232,7 +233,46 @@ s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E0DC_jp.s")
+void func_80A0E0DC_jp(Shop* this UNUSED) {
+    s32 timeSec;
+    Color_RGBA8 color;
+    s32 msgNum;
+
+    timeSec = common_data.time.nowSec;
+
+    if (func_8007D318_jp(0) != 0) {
+        if (func_800C2578_jp() == 0) {
+            msgNum = 0x7D1;
+        } else {
+            msgNum = 0x7D9;
+        }
+    } else if ((common_data.time.rtcTime.day ==
+                lbRTC_GetDaysByMonth(common_data.time.rtcTime.year, common_data.time.rtcTime.month)) &&
+               timeSec >= 0x5460) {
+        if (func_800C2578_jp() == 0) {
+            msgNum = 0x7D6;
+        } else {
+            msgNum = 0x7D7;
+        }
+    } else if (func_800C2578_jp() == 3) {
+        msgNum = 0x7D8;
+    } else {
+        msgNum = 0x7CD;
+    }
+
+    mDemo_Set_msg_num(msgNum);
+    mDemo_Set_talk_display_name(0);
+    mDemo_Set_camera(1);
+    mPlib_Set_able_hand_all_item_in_demo(1);
+    mDemo_Set_ListenAble();
+
+    color.r = 0x91;
+    color.g = 0x3C;
+    color.b = 0x28;
+    color.a = 0xFF;
+
+    mDemo_Set_talk_window_color(&color);
+}
 
 void func_80A0E1F0_jp(Actor* thisx) {
     s32 timeSec = common_data.time.nowSec;
@@ -241,8 +281,7 @@ void func_80A0E1F0_jp(Actor* thisx) {
     if (func_8007D650_jp() == 1) {
         this->structureActor.unk_2B8 = 0;
 
-        if ((func_800C2578_jp() == 2) &&
-            ((timeSec >= mTM_TIME_TO_SEC(18, 0, 0) || timeSec < mTM_TIME_TO_SEC(5, 0, 0)))) {
+        if (func_800C2578_jp() == 2 && ((timeSec >= mTM_TIME_TO_SEC(18, 0, 0) || timeSec < mTM_TIME_TO_SEC(5, 0, 0)))) {
             this->structureActor.unk_2B8 = 1;
         }
     } else if (timeSec < mTM_TIME_TO_SEC(18, 0, 0) || timeSec >= mTM_TIME_TO_SEC(22, 0, 0)) {
