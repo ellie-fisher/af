@@ -85,6 +85,7 @@ extern f32 D_FLT_80A0EA74_jp[4];
 extern f32 D_80A0EA84_jp[4];
 extern u8 D_80A0E9C4_jp[];
 extern ShadowData D_80A0E9CC_jp;
+extern DoorData D_80A0E9E8_jp;
 extern BaseAnimationR* D_80A0EA94_jp[];
 extern f32 D_FLT_80A0EA9C_jp[];
 extern f32 D_FLT_80A0EAAC_jp[];
@@ -303,7 +304,24 @@ void func_80A0E2B4_jp(Shop* this, Game_Play* game_play) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E334_jp.s")
+void func_80A0E334_jp(Shop* this, Game_Play* game_play) {
+    xyz_t pos;
+
+    if (get_player_actor_withoutCheck((Game_Play*)gamePT)->unk_122C((Game_Play*)gamePT) == this) {
+        func_80A0DED4_jp(this, game_play);
+        goto_other_scene(game_play, &D_80A0E9E8_jp, 0);
+    } else if ((func_80A0E02C_jp(this, game_play) == 0) || (func_80A0DFD0_jp(game_play) == 0)) {
+        if (func_800C2578_jp() != 2) {
+            aSHOP_setupAction(this, 2);
+        }
+    } else {
+        pos.x = this->structureActor.actor.world.pos.x - 50.0f;
+        pos.y = get_player_actor_withoutCheck(game_play)->actor.world.pos.y;
+        pos.z = this->structureActor.actor.world.pos.z + 50.0f;
+
+        mPlib_request_main_door_type1(game_play, &pos, 0x6000, 1, &this->structureActor.actor);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E440_jp.s")
 
