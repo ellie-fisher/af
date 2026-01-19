@@ -323,7 +323,11 @@ void func_80A0E334_jp(Shop* this, Game_Play* game_play) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E440_jp.s")
+void func_80A0E440_jp(Shop* this, Game_Play* game_play UNUSED) {
+    if (this->structureActor.unk_174 == 1) {
+        aSHOP_setupAction(this, 0);
+    }
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E474_jp.s")
 
