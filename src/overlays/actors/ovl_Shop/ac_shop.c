@@ -24,25 +24,29 @@
 
 void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play);
 void aSHOP_actor_dt(Actor* thisx, Game_Play* game_play);
-void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
-void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
-void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
 
+void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex);
 void func_80A0DED4_jp(Shop* this, Game_Play* game_play);
 
-s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                            u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
-s32 aSHOP_actor_draw_after(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
-                           u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
+s32 func_80A0DFD0_jp(Game_Play* game_play);
+void func_80A0E1F0_jp(Actor* thisx);
 
 void func_80A0E2B4_jp(Shop* this, Game_Play* game_play);
 void func_80A0E334_jp(Shop* this, Game_Play* game_play);
 void func_80A0E440_jp(Shop* this, Game_Play* game_play);
 void func_80A0E474_jp(Shop* this, Game_Play* game_play);
 
-void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex);
-void func_80A0E1F0_jp(Actor* thisx);
 void aSHOP_setupAction(Shop* this, s32 processIndex);
+
+void aSHOP_actor_move(Actor* thisx, Game_Play* game_play);
+void aSHOP_actor_init(Actor* thisx, Game_Play* game_play);
+
+s32 aSHOP_actor_draw_before(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
+                            u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
+s32 aSHOP_actor_draw_after(Game_Play* game_play, SkeletonInfoR* skeletonInfo, s32 jointIndex, Gfx** dlist,
+                           u8* displayBufferFlag, void* thisx, s_xyz* rotation, xyz_t* translation);
+
+void aSHOP_actor_draw(Actor* thisx, Game_Play* game_play);
 
 #if 0
 ActorProfile Shop_Profile = {
@@ -193,7 +197,17 @@ void func_80A0DED4_jp(Shop* this, Game_Play* game_play) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0DFD0_jp.s")
+s32 func_80A0DFD0_jp(Game_Play* game_play) {
+    Player* player = get_player_actor_withoutCheck(game_play);
+    s32 var_v0 = 0;
+
+    if ((u16)player->actor.world.rot.y >= 0x4001 && (u16)player->actor.world.rot.y < 0x8000 &&
+        player->actor.speed > 0.0f) {
+        var_v0 = 1;
+    }
+
+    return var_v0;
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E02C_jp.s")
 
