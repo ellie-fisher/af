@@ -90,14 +90,14 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     s32 var_v1;
     Player* player;
     s32 isWinter;
-    s32 var_v3;
-    s32 var_v4;
+    s32 processIndex;
+    UNUSED s32 pad;
 
     Shop* this = THIS;
     StructureActor* shop = &this->structureActor;
     player = get_player_actor_withoutCheck(game_play);
     isWinter = common_data.time.season == WINTER;
-    var_v3 = 1;
+    processIndex = 1;
 
     SegmentBaseAddress[6] =
         (uintptr_t)OS_PHYSICAL_TO_K0(common_data.clip.structureClip->getObjectSegment(STRUCTURE_TYPE_SHOP));
@@ -112,18 +112,17 @@ void aSHOP_actor_ct(Actor* thisx, Game_Play* game_play) {
     thisx->unk_144 = 80.0f;
 
     if (func_800C2578_jp() != 2) {
-        var_v3 = 0;
+        processIndex = 0;
     }
 
     var_v0 = (s32)(thisx->world.pos.x - 68.29f);
     var_v1 = (s32)(thisx->world.pos.z + 68.29f);
-    var_v4 = var_v3;
 
     if ((var_v0 == (s32)player->actor.world.pos.x) && (var_v1 == (s32)player->actor.world.pos.z)) {
-        var_v4 = 1;
+        processIndex = 1;
     }
 
-    aSHOP_setupAction(this, var_v4);
+    aSHOP_setupAction(this, processIndex);
 
     shop->unk_174 = cKF_SkeletonInfo_R_play(&shop->skeletonInfo);
     shop->unk_1E8 = 1;
@@ -156,12 +155,12 @@ void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex) {
 
     offsetTable = D_80A0EA6C_jp[heightTableIndex];
 
-    for (j = 0; j < 4; j++) {
-        pos.z = D_80A0EA84_jp[j] + this->structureActor.actor.home.pos.z;
+    for (i = 0; i < ARRAY_COUNT(D_80A0EA84_jp); i++) {
+        pos.z = D_80A0EA84_jp[i] + this->structureActor.actor.home.pos.z;
 
-        for (i = 0; i < 4; i++) {
-            if (j * 4 + i != 0 && j * 4 + i != 3 && j * 4 + i != 12 && j * 4 + i != 15) {
-                pos.x = this->structureActor.actor.home.pos.x + D_FLT_80A0EA74_jp[i];
+        for (j = 0; j < ARRAY_COUNT(D_FLT_80A0EA74_jp); j++) {
+            if (i * 4 + j != 0 && i * 4 + j != 3 && i * 4 + j != 12 && i * 4 + j != 15) {
+                pos.x = this->structureActor.actor.home.pos.x + D_FLT_80A0EA74_jp[j];
                 mCoBG_SetPluss5PointOffset_file(pos, *offsetTable, "../ac_shop_move.c_inc", 162);
             }
 
@@ -211,15 +210,11 @@ void func_80A0E1F0_jp(Actor* thisx) {
             ((timeSec >= mTM_TIME_TO_SEC(18, 0, 0) || timeSec < mTM_TIME_TO_SEC(5, 0, 0)))) {
             this->structureActor.unk_2B8 = 1;
         }
+    } else if (timeSec < mTM_TIME_TO_SEC(18, 0, 0) || timeSec >= mTM_TIME_TO_SEC(22, 0, 0)) {
+        this->structureActor.unk_2B8 = 0;
+    } else if (func_800C2578_jp() == 2) {
+        this->structureActor.unk_2B8 = 1;
     } else {
-        if (timeSec < mTM_TIME_TO_SEC(18, 0, 0) || timeSec >= mTM_TIME_TO_SEC(22, 0, 0)) {
-            this->structureActor.unk_2B8 = 0;
-            return;
-        } else if (func_800C2578_jp() == 2) {
-            this->structureActor.unk_2B8 = 1;
-            return;
-        }
-
         this->structureActor.unk_2B8 = 0;
     }
 }
