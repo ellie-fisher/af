@@ -29,6 +29,8 @@ void aSHOP_set_bgOffset(Shop* this, s32 heightTableIndex);
 void func_80A0DED4_jp(Shop* this, Game_Play* game_play);
 
 s32 func_80A0DFD0_jp(Game_Play* game_play);
+s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play);
+
 void func_80A0E1F0_jp(Actor* thisx);
 
 void func_80A0E2B4_jp(Shop* this, Game_Play* game_play);
@@ -209,7 +211,26 @@ s32 func_80A0DFD0_jp(Game_Play* game_play) {
     return var_v0;
 }
 
-#pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E02C_jp.s")
+s32 func_80A0E02C_jp(Shop* this, Game_Play* game_play) {
+    Player* player = get_player_actor_withoutCheck(game_play);
+    s32 var_v0 = 0;
+    f32 diffX;
+    f32 diffZ;
+
+    if (player == NULL) {
+        return 0;
+    }
+
+    diffX = player->actor.world.pos.x - (this->structureActor.actor.world.pos.x - 38.0f);
+    diffZ = player->actor.world.pos.z - (this->structureActor.actor.world.pos.z + 42.0f);
+
+    if ((u16)player->actor.shape.rot.y >= 0x4001 && (u16)player->actor.shape.rot.y < 0x8000 &&
+        (diffX * diffX + diffZ * diffZ) < 550.0f) {
+        var_v0 = 1;
+    }
+
+    return var_v0;
+}
 
 #pragma GLOBAL_ASM("asm/jp/nonmatchings/overlays/actors/ovl_Shop/ac_shop/func_80A0E0DC_jp.s")
 
